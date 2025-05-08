@@ -1,0 +1,16 @@
+push_tests:
+  - name: "Heartbeat"
+    url: "https://push.statuscake.com/?PK=12345&TestID=67890&time=0"
+    interval: 300
+    retries: 3
+  - name: "Nginx status"
+    url: "http://pshmn.com/ebFnY1"
+    interval: 3600
+    retries: 3
+    command: "service nginx status"
+logging:
+  file: "/var/log/pushmonitor.log"
+  level: "info"
+
+pid_file: "/opt/pushmonitor/pid"
+timeout: 30
