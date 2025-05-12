@@ -1,4 +1,4 @@
+pushmonitor
 build/*
 config/config.yaml
-*.pid
 *.log
