@@ -40,7 +40,6 @@ Pushmonitor looks for a configuration file in the following locations (in order)
 - Optional pre-test system commands
 - Logging options
 - Global timeout setting
-- Optional PID file path
 
 ### Example `config.yaml`
 
@@ -61,7 +60,6 @@ logging:
   file: "/var/log/pushmonitor.log"
   level: "info"
 
-pid_file: "/etc/pushmonitor/pid"
 timeout: 30             # in seconds
 ```
 

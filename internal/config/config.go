@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"os"
-	"sync"
 
 	"github.com/pedrocarrico/pushmonitor/internal/pushtest"
 	"gopkg.in/yaml.v2"
@@ -12,9 +11,7 @@ import (
 type Config struct {
 	PushTests []pushtest.PushTest `yaml:"push_tests"`
 	Logging   LogConfig           `yaml:"logging"`
-	PIDFile   string              `yaml:"pid_file"`
 	Timeout   int                 `yaml:"timeout"`
-	mutex     sync.RWMutex
 }
 
 type LogConfig struct {
@@ -45,17 +42,6 @@ func (c *Config) Load() error {
 	err = yaml.Unmarshal(configData, c)
 	if err != nil {
 		return fmt.Errorf("error parsing config file: %v", err)
-	}
-
-	return nil
-}
-
-func (c *Config) Reload() error {
-	c.mutex.Lock()
-	defer c.mutex.Unlock()
-
-	if err := c.Load(); err != nil {
-		return fmt.Errorf("failed to reload configuration: %v", err)
 	}
 
 	return nil

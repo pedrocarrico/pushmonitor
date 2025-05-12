@@ -12,5 +12,4 @@ logging:
   file: "/var/log/pushmonitor.log"
   level: "info"
 
-pid_file: "/opt/pushmonitor/pid"
 timeout: 30
