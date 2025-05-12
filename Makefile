@@ -16,3 +16,6 @@ build-linux:
 clean:
 	rm -rf build/
 	rm -f pushmonitor
+
+fmt:
+	gofmt -s -w .
