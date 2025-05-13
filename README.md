@@ -23,7 +23,7 @@ make build
 2. **Run the application:**
 
 ```bash
-./pushmonitor
+./bin/pushmonitor
 ```
 
 ## Configuration

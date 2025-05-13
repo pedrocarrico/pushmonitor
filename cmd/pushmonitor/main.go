@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"flag"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -11,16 +13,32 @@ import (
 
 	"github.com/pedrocarrico/pushmonitor/internal/config"
 	"github.com/pedrocarrico/pushmonitor/internal/logger"
+	"github.com/pedrocarrico/pushmonitor/internal/version"
 )
 
 var (
-	cfg config.Config
+	cfg         config.Config
+	showVersion bool
 )
 
+func init() {
+	flag.BoolVar(&showVersion, "version", false, "Show version information")
+	flag.BoolVar(&showVersion, "v", false, "Show version information (shorthand)")
+}
+
 func main() {
+	flag.Parse()
+	v := version.Get()
+
+	if showVersion {
+		fmt.Printf("Push Monitor version %s (build: %s, commit: %s)\n", v.Version, v.BuildTime, v.GitCommit)
+		os.Exit(0)
+	}
+
 	// Initialize logger with default settings (stdout and info level)
 	logger.Init("info", os.Stdout)
 
+	logger.Info("Starting Push Monitor version %s (build: %s, commit: %s)", v.Version, v.BuildTime, v.GitCommit)
 	// Load configuration
 	logger.Info("Loading configuration...")
 	if err := cfg.Load(); err != nil {
