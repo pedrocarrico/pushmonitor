@@ -35,11 +35,8 @@ func main() {
 		os.Exit(0)
 	}
 
-	// Initialize logger with default settings (stdout and info level)
 	logger.Init("info", os.Stdout)
-
 	logger.Info("Starting Push Monitor version %s (build: %s, commit: %s)", v.Version, v.BuildTime, v.GitCommit)
-	// Load configuration
 	logger.Info("Loading configuration...")
 	if err := cfg.Load(); err != nil {
 		logger.Error("Failed to load configuration: %v", err)
