@@ -19,10 +19,12 @@ type LogConfig struct {
 	Level string `yaml:"level"`
 }
 
-func (c *Config) Load() error {
-	configLocations := []string{
-		"/etc/pushmonitor/config.yaml",
-		"config/config.yaml",
+func (c *Config) Load(configLocations ...string) error {
+	if configLocations == nil {
+		configLocations = []string{
+			"/etc/pushmonitor/config.yaml",
+			"config/config.yaml",
+		}
 	}
 
 	var configData []byte

@@ -1,4 +1,5 @@
-pushmonitor
+*.log
 build/*
 config/config.yaml
-*.log
+coverage.out
+pushmonitor

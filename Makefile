@@ -17,5 +17,11 @@ clean:
 	rm -rf build/
 	rm -f pushmonitor
 
+coverage_report: test
+	go tool cover -html=coverage.out
+
 fmt:
 	gofmt -s -w .
+
+test:
+	go test ./... -v -coverprofile coverage.out
