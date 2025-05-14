@@ -95,7 +95,7 @@ func (p *PushTest) Run(client *http.Client, wg *sync.WaitGroup, ctx context.Cont
 			}
 
 			logger.Debug("Executing push test: %s", p.Name)
-			for i := 0; i < p.Retries; i++ {
+			for i := range p.Retries {
 				logger.Debug("Test %s: Attempt %d/%d", p.Name, i+1, p.Retries)
 				if p.executeRequest(client) {
 					break
