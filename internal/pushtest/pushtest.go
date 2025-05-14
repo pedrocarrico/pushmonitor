@@ -2,6 +2,7 @@ package pushtest
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"os/exec"
@@ -43,11 +44,10 @@ func (p *PushTest) shouldRun() bool {
 	return true
 }
 
-func (p *PushTest) executeRequest(client *http.Client) bool {
+func (p *PushTest) executeRequest(client *http.Client) error {
 	req, err := http.NewRequest("GET", p.URL, nil)
 	if err != nil {
-		logger.Error("Error creating request for test %s: %v", p.Name, err)
-		return false
+		return fmt.Errorf("error creating request: %w", err)
 	}
 
 	q := req.URL.Query()
@@ -56,24 +56,20 @@ func (p *PushTest) executeRequest(client *http.Client) bool {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		logger.Error("Error executing push test %s: %v", p.Name, err)
-		return false
+		return fmt.Errorf("error executing request: %w", err)
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		logger.Error("Error reading response for test %s: %v", p.Name, err)
-		return false
+		return fmt.Errorf("error reading response: %w", err)
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		logger.Info("Successfully executed push test %s", p.Name)
-		return true
+		return nil
 	}
 
-	logger.Warn("Push test %s failed with status %d: %s", p.Name, resp.StatusCode, string(body))
-	return false
+	return fmt.Errorf("failed with status %d: %s", resp.StatusCode, string(body))
 }
 
 func (p *PushTest) Run(client *http.Client, wg *sync.WaitGroup, ctx context.Context) {
@@ -95,11 +91,19 @@ func (p *PushTest) Run(client *http.Client, wg *sync.WaitGroup, ctx context.Cont
 			}
 
 			logger.Debug("Executing push test: %s", p.Name)
+			var err error
 			for i := range p.Retries {
 				logger.Debug("Test %s: Attempt %d/%d", p.Name, i+1, p.Retries)
-				if p.executeRequest(client) {
+				err = p.executeRequest(client)
+				if err == nil {
+					logger.Info("Successfully executed push test %s", p.Name)
 					break
+				} else {
+					logger.Error("Error executing push test %s: %v", p.Name, err)
 				}
+			}
+			if err != nil {
+				logger.Error("All attempts failed for test %s: %v", p.Name, err)
 			}
 			logger.Debug("Completed push test cycle for: %s", p.Name)
 		}
