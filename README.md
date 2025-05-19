@@ -122,6 +122,6 @@ It is expected to work on other modern Linux distributions that support systemd.
 
 MIT License. See [LICENSE.md](./LICENSE.md) for details.
 
-##Contributions
+## Contributions
 
 Contributions, issues, and feature requests are welcome! Please open a pull request or issue on GitHub.
